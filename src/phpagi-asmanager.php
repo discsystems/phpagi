@@ -437,9 +437,17 @@ class AGI_AsteriskManager
       $actionid = $this->ActionID();
     $parameters['ActionID'] = $actionid;
     $response = $this->send_request("DBGet", $parameters);
-    if (!isset($response['Response']) || (isset($response['Response']) && $response['Response'] == "Success")) {
-      $response = $this->wait_response(false, $actionid);
-      return $response['Val'];
+    if (isset($response['Response'])) {
+      if ($response['Response'] == "Success") {
+        $response = $this->wait_response(false, $actionid);
+        return $response['Val'];
+      }
+    } else {
+      if (isset($response['events'])) {
+        if (count($response['events']) > 0) {
+          return $response['events'][0]['Val'];
+        }
+      }
     }
     return "";
   }
@@ -658,13 +666,21 @@ class AGI_AsteriskManager
    * @param string $queue
    * @param string $interface
    * @param integer $penalty
+   * @param boolean $paused
    * @param string $memberName
+   * @param string $stateInterface
    */
-  function QueueAdd($queue, $interface, $penalty = 0, $memberName = false)
+  function QueueAdd($queue, $interface, $penalty = 0, $paused = 0, $memberName = "", $stateInterface = "")
   {
-    $parameters = array('Queue' => $queue, 'Interface' => $interface);
-    if ($penalty) $parameters['Penalty'] = $penalty;
-    if ($memberName) $parameters["MemberName"] = $memberName;
+    $parameters = array(
+      'Queue' => $queue,
+      'Interface' => $interface,
+      'Penalty' => $penalty,
+      'Paused' => $paused,
+      'MemberName' => $memberName,
+      'StateInterface' => $stateInterface
+    );
+
     return $this->send_request('QueueAdd', $parameters);
   }
 
