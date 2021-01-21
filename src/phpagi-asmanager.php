@@ -437,7 +437,7 @@ class AGI_AsteriskManager
       $actionid = $this->ActionID();
     $parameters['ActionID'] = $actionid;
     $response = $this->send_request("DBGet", $parameters);
-    if ($response['Response'] == "Success") {
+    if (!isset($response['Response']) || (isset($response['Response']) && $response['Response'] == "Success")) {
       $response = $this->wait_response(false, $actionid);
       return $response['Val'];
     }
