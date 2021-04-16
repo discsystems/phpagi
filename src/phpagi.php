@@ -1283,7 +1283,7 @@ class AGI
      * @param string $extension
      * @param string $priority
      */
-    function setContext($context, $extension = 's', $priority = 1)
+    function goto_dest($context, $extension = 's', $priority = 1)
     {
         $this->set_context($context);
         $this->set_extension($extension);
