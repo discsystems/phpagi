@@ -381,7 +381,7 @@ class AGI
      */
     function exec($application, $options)
     {
-        if (is_array($options)) $options = join('|', $options);
+        if (is_array($options)) $options = join($this->option_delim, $options);
         return $this->evaluate("EXEC $application $options");
     }
 
