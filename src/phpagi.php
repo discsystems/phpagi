@@ -381,7 +381,7 @@ class AGI
      */
     function exec($application, $options)
     {
-        if (is_array($options)) $options = join('|', $options);
+        if (is_array($options)) $options = join($this->option_delim, $options);
         return $this->evaluate("EXEC $application $options");
     }
 
@@ -875,6 +875,29 @@ class AGI
     }
 
     /**
+     * SIPAddHeader
+     *
+     * @param string $header SIP Header
+     * @param string $value SIP Header Value
+     * @return array, see evaluate for return information.
+     */
+    function exec_sipaddheader($header, $value)
+    {
+        return $this->exec('SIPAddHeader', '"' . $header . ":" . $value . '"');
+    }
+
+    /**
+     * Alertinfo
+     *
+     * @param string $value SIP Alertinfo to set
+     * @return array, see evaluate for return information.
+     */
+    function set_alertinfo($value)
+    {
+        return $this->exec_sipaddheader('Alert-Info', $value);
+    }
+
+    /**
      * Do ENUM Lookup.
      *
      * Note: to retrieve the result, use
@@ -1260,7 +1283,7 @@ class AGI
      * @param string $extension
      * @param string $priority
      */
-    function setContext($context, $extension = 's', $priority = 1)
+    function goto_dest($context, $extension = 's', $priority = 1)
     {
         $this->set_context($context);
         $this->set_extension($extension);
