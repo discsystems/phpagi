@@ -386,6 +386,19 @@ class AGI
     }
 
     /**
+    * Executes the specified event with given options.
+    *
+    * @param string $eventName
+    * @param mixed $options
+    * @return array, see evaluate for return information. 
+    */
+    function event($eventName, $options)
+    {
+      if(is_array($options)) $options = join(',', $options);
+      return $this->evaluate("EXEC UserEvent \"$eventName,$options\"");
+    }
+
+    /**
      * Plays the given file and receives DTMF data.
      *
      * This is similar to STREAM FILE, but this command can accept and return many DTMF digits,
